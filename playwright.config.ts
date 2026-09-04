@@ -8,7 +8,7 @@ export default defineConfig({
   use: { baseURL: 'http://localhost:3001', trace: 'retain-on-failure' },
   projects: [{ name: 'edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } }],
   webServer: {
-    command: 'npm run dev -- --port 3001',
+    command: 'pnpm run dev --port 3001',
     reuseExistingServer: true,
     url: 'http://localhost:3001',
     timeout: 120000,

@@ -73,12 +73,15 @@ test.afterAll(async () => {
     if (user) await payload.delete({ collection: 'users', id: user.id, overrideAccess: true })
   await payload.destroy()
 })
-test('public portfolio, mobile navigation, and gallery selection', async ({ page }) => {
+test('public portfolio, mobile navigation, and gallery selection', async ({ page, request }) => {
   const errors: string[] = []
   page.on('pageerror', (e) => errors.push(e.message))
   for (const route of ['/', '/about', '/work', '/services', '/contact']) {
-    const result = await page.goto(route)
-    expect(result?.status()).toBe(200)
+    // Check HTTP separately: a navigation interrupted by dev-server refresh can return null.
+    const response = await request.get(route)
+    expect(response.status(), `HTTP status for ${route}`).toBe(200)
+    await page.goto(route, { waitUntil: 'domcontentloaded' })
+    await expect(page).toHaveURL(new URL(route, 'http://localhost:3001').href)
     await expect(page.locator('main')).toBeVisible()
   }
   await page.goto('/about')
