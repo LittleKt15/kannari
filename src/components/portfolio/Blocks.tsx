@@ -131,13 +131,18 @@ function Block({
             )}
           </div>
           {mediaURL(b.image) && (
-            <div className="relative flex-1 min-h-[300px] md:min-h-[600px] order-1 md:order-2">
+            <div className="relative flex-none md:flex-1 h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] mb-6 md:mb-0 order-1 md:order-2">
               <Image
                 src={mediaURL(b.image)}
                 alt={mediaAlt(b.image)}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover rounded-lg"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 50vw, 500px"
+                loading="eager"
+                className="object-cover rounded-lg shadow-lg"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-lg pointer-events-none"
               />
             </div>
           )}
