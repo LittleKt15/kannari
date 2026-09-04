@@ -44,6 +44,8 @@ export async function POST(request: Request) {
         { error: 'Please wait a few minutes before sending another inquiry.' },
         { status: 429 },
       )
+    // Validated, allowlisted contact data only. Direct public inquiry CRUD remains denied.
+    // payload-doctor-disable-next-line local-api-override-access
     const inquiry = await payload.create({ collection: 'inquiries', overrideAccess: true, data })
     await deliverInquiry(payload, inquiry.id).catch(() =>
       payload.logger.error('Inquiry saved; notification status update failed.'),

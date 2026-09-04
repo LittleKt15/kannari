@@ -142,6 +142,57 @@ test('REST permissions, draft privacy, and publish invalidation', async ({ reque
   const publicRead = await request.get(`/api/pages/${draftID}?draft=true`)
   expect(await publicRead.text()).not.toContain('Unpublished revision')
 })
+test('seed identifiers stay private and immutable through REST', async ({ request }) => {
+  const ids: number[] = []
+  try {
+    const seeded = await payload.create({
+      collection: 'services',
+      overrideAccess: true,
+      context,
+      data: { title: marker, seedKey: marker, _status: 'published' },
+    })
+    ids.push(seeded.id)
+    const publicRead = await request.get(`/api/services/${seeded.id}`)
+    expect(publicRead.ok()).toBeTruthy()
+    expect(await publicRead.json()).not.toHaveProperty('seedKey')
+    const headers = { Authorization: `JWT ${token}` }
+    const changed = await request.patch(`/api/services/${seeded.id}`, {
+      headers,
+      data: { title: `${marker}-edited`, seedKey: `${marker}-tampered` },
+    })
+    expect(changed.ok(), await changed.text()).toBeTruthy()
+    expect(await changed.json()).not.toHaveProperty('seedKey')
+    const stored = await payload.findByID({
+      collection: 'services',
+      id: seeded.id,
+      overrideAccess: true,
+    })
+    expect(stored.seedKey).toBe(marker)
+    expect(stored.title).toBe(`${marker}-edited`)
+    const created = await request.post('/api/services', {
+      headers,
+      data: { title: `${marker}-created`, seedKey: `${marker}-injected`, _status: 'draft' },
+    })
+    const body = await created.json()
+    if (body.doc?.id) ids.push(body.doc.id)
+    expect(created.ok()).toBeTruthy()
+    const saved = await payload.findByID({
+      collection: 'services',
+      id: body.doc.id,
+      overrideAccess: true,
+    })
+    expect(saved.seedKey ?? null).toBeNull()
+    for (const collection of ['projects', 'services', 'clients']) {
+      expect((await request.post(`/api/${collection}`, { data: { title: marker } })).status()).toBe(
+        403,
+      )
+    }
+  } finally {
+    for (const id of ids)
+      await payload.delete({ collection: 'services', id, overrideAccess: true, context })
+  }
+})
+
 test('admin dashboard and editable page controls', async ({ page }) => {
   await page.goto('/admin/login')
   await page.locator('input[name="email"]').fill(admin.email)
