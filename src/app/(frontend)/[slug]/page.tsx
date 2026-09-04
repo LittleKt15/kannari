@@ -1,4 +1,5 @@
-import { PageView, pageMetadata } from '@/components/portfolio/PageView'
+import { PageView } from '@/components/portfolio/PageView'
+import { pageMetadata } from '@/lib/page-metadata'
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   return pageMetadata((await params).slug)
 }

@@ -1,11 +1,12 @@
 'use client'
 import { useDocumentInfo } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 export function RetryEmail() {
   const { id } = useDocumentInfo()
   const router = useRouter()
   const [status, setStatus] = useState('')
+  const sending = useRef(false)
   return (
     <div>
       <button
@@ -13,6 +14,8 @@ export function RetryEmail() {
         className="kn-button"
         disabled={!id || status === 'Sending…'}
         onClick={async () => {
+          if (!id || sending.current) return
+          sending.current = true
           setStatus('Sending…')
           try {
             const r = await fetch(`/api/inquiries/${id}/retry`, { method: 'POST' })
@@ -20,6 +23,8 @@ export function RetryEmail() {
             router.refresh()
           } catch {
             setStatus('Retry failed.')
+          } finally {
+            sending.current = false
           }
         }}
       >

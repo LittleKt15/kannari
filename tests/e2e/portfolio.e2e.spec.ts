@@ -93,7 +93,10 @@ test('public portfolio, mobile navigation, and gallery selection', async ({ page
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await pictures.nth(1).click()
   await expect(page.getByRole('dialog')).toContainText('2 / 32')
-  await page.keyboard.press('Escape')
+  await page
+    .getByRole('button', { name: 'Close dialog backdrop', exact: true })
+    .click({ position: { x: 5, y: 5 } })
+  await expect(page.getByRole('dialog')).toHaveCount(0)
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
   await page.getByRole('button', { name: 'Open navigation' }).click()
@@ -238,6 +241,42 @@ test('contact persists when SMTP is absent, validates, and throttles', async ({ 
     expect((await request.post('/api/contact', { data, headers })).status()).toBe(201)
   expect((await request.post('/api/contact', { data, headers })).status()).toBe(429)
 })
+
+for (const javaScriptEnabled of [true, false]) {
+  test(`contact Server Action works with JavaScript ${javaScriptEnabled ? 'enabled' : 'disabled'}`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled,
+      baseURL: 'http://localhost:3001',
+    })
+    try {
+      const page = await context.newPage()
+      await page.goto('/contact')
+      await page.locator('input[name="firstName"]').fill('   ')
+      await page.locator('input[name="lastName"]').fill('Preserved')
+      await page.locator('input[name="email"]').fill(`${marker}@example.invalid`)
+      await page.locator('input[name="phoneNumber"]').fill('123456')
+      await page.locator('select[name="serviceInterest"]').selectOption('other')
+      await page.locator('input[name="otherService"]').fill('Verification')
+      await page.locator('textarea[name="message"]').fill('Server Action verification')
+      await page.getByRole('button', { name: 'Send', exact: true }).click()
+      await expect(page.locator('form').getByRole('alert')).toContainText('Please check firstName.')
+      await expect(page.locator('input[name="lastName"]')).toHaveValue('Preserved')
+      await expect(page.locator('input[name="otherService"]')).toHaveValue('Verification')
+      await page.locator('input[name="firstName"]').fill('Verification')
+      // Exercise success feedback without persisting an inquiry or sending real email.
+      await page.locator('input[name="website"]').evaluate((input: HTMLInputElement) => {
+        input.value = 'bot'
+      })
+      await page.getByRole('button', { name: 'Send', exact: true }).click()
+      await expect(page.getByRole('status')).toContainText('Thank you')
+      await expect(page.locator('input[name="firstName"]')).toHaveValue('')
+    } finally {
+      await context.close()
+    }
+  })
+}
 
 test('authenticated large media uploads go directly to Blob', async ({ page }) => {
   test.skip(!process.env.BLOB_READ_WRITE_TOKEN, 'Requires a public Blob store')
