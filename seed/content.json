@@ -1,0 +1,374 @@
+{
+  "logos1": [
+    {
+      "name": "Leadership Fairfax",
+      "url": "/logos/leadership_fairfax.png"
+    },
+    {
+      "name": "The Moth",
+      "url": "/logos/The_Moth.png"
+    },
+    {
+      "name": "AIHA",
+      "url": "/logos/AIHA.png"
+    },
+    {
+      "name": "Lerch Early Brewer",
+      "url": "/logos/lerchearly_brewer.jpg"
+    },
+    {
+      "name": "YES Career Coaching",
+      "url": "/logos/YES_career_coaching&resume_writing.png"
+    },
+    {
+      "name": "Alliance for Gender Inclusion",
+      "url": "/logos/alliance_for_gender_inclusion_in_the_peace_process.png"
+    },
+    {
+      "name": "SlidesLive",
+      "url": "/logos/slideslive.png"
+    },
+    {
+      "name": "Voice of America",
+      "url": "/logos/voice_of_america.png"
+    },
+    {
+      "name": "Hillsdale College",
+      "url": "/logos/hillsdale_college.png"
+    },
+    {
+      "name": "1 Minute Videos Daily",
+      "url": "/logos/1-minute_videos_Daily.jpg"
+    },
+    {
+      "name": "ISP",
+      "url": "/logos/isp-.png"
+    },
+    {
+      "name": "Powell Consulting Group",
+      "url": "/logos/powell_consulting_group.png"
+    }
+  ],
+  "logos2": [
+    {
+      "name": "Northern Virginia Family Service",
+      "url": "/logos/northern_virginia_family_service.jpg"
+    },
+    {
+      "name": "CEPA",
+      "url": "/logos/CEPA.jpg"
+    },
+    {
+      "name": "Imprint",
+      "url": "/logos/imprint.jpeg"
+    },
+    {
+      "name": "Okta",
+      "url": "/logos/okta.png"
+    },
+    {
+      "name": "Xero",
+      "url": "/logos/xero.png"
+    },
+    {
+      "name": "Ace Hardware",
+      "url": "/logos/acehardware.jpg"
+    },
+    {
+      "name": "Forrester",
+      "url": "/logos/forrester.png"
+    },
+    {
+      "name": "TD Ameritrade",
+      "url": "/logos/TD-ameritrade.jpg"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "/logos/LinkedIn.jpg"
+    }
+  ],
+  "projects": [
+    {
+      "id": "interview-demo",
+      "imageSrc": "/work/InterviewDemoReel.jpg",
+      "title": "Interview Demo Reel",
+      "subtitle": "Professional Portfolio",
+      "vimeoId": "918705529",
+      "videoType": "vimeo"
+    },
+    {
+      "id": "little-ink-shop",
+      "imageSrc": "/work/LittleInkShop.jpg",
+      "title": "Little Ink Shop",
+      "subtitle": "Creative Studio Showcase",
+      "vimeoId": "229350865",
+      "videoType": "vimeo"
+    },
+    {
+      "id": "powell-consulting",
+      "imageSrc": "/work/PowellConsultingGroup.jpg",
+      "title": "Powell Consulting Group",
+      "subtitle": "Business Consulting Services",
+      "vimeoId": "276131950",
+      "videoType": "vimeo"
+    },
+    {
+      "id": "sellers-studio",
+      "imageSrc": "/work/Linkedin_Inside_the_sellers_studio.jpg",
+      "title": "Inside the Seller's Studio",
+      "subtitle": "LinkedIn Series",
+      "vimeoId": "373888165",
+      "videoType": "vimeo"
+    },
+    {
+      "id": "cepa-forum",
+      "imageSrc": "/work/2023CEPAForum.jpg",
+      "title": "2023 CEPA Forum",
+      "subtitle": "Winning the War. Winning the Peace.",
+      "youtubeId": "ztkkJN2vj5I",
+      "videoType": "youtube"
+    },
+    {
+      "id": "about-leadership-fairfax",
+      "imageSrc": "/work/AboutLeadershipFairfax.jpg",
+      "title": "About Leadership Fairfax",
+      "subtitle": "Leadership Development Program",
+      "vimeoId": "1052746480",
+      "vimeoHash": "1d856357c9",
+      "videoType": "vimeo"
+    },
+    {
+      "id": "nvfs-100",
+      "imageSrc": "/work/Northern Virginia Family ServiceCelebrates100thYearsofService.jpg",
+      "title": "NVFS 100th Year Celebration",
+      "subtitle": "Centennial Milestone",
+      "vimeoId": "1052748162",
+      "vimeoHash": "693280a644",
+      "videoType": "vimeo"
+    },
+    {
+      "id": "cutting-boards",
+      "imageSrc": "/work/CuttingBoards&CulinarySkies.jpg",
+      "title": "Cutting Boards & Culinary Skies",
+      "subtitle": "Culinary Arts Series",
+      "vimeoId": "1069681171",
+      "vimeoHash": "e855d31df8",
+      "videoType": "vimeo"
+    }
+  ],
+  "services": [
+    {
+      "category": "PROMOTIONAL",
+      "items": [
+        "Business Profile",
+        "Corporate",
+        "Marketing/Social",
+        "Media Commercial"
+      ]
+    },
+    {
+      "category": "INTERVIEWS",
+      "items": [
+        "Panel Discussion",
+        "Testimonials",
+        "Presentations"
+      ]
+    },
+    {
+      "category": "EVENTS",
+      "items": [
+        "Conferences",
+        "Workshops",
+        "Live Shows"
+      ]
+    }
+  ],
+  "aboutGallery": [
+    {
+      "src": "/Behind the Scenes/A94BD991-FCDA-4C98-BE97-2B64F9722246.JPG",
+      "alt": "Behind the scenes shot 1"
+    },
+    {
+      "src": "/Behind the Scenes/IMG_0027.JPG",
+      "alt": "Behind the scenes shot 2"
+    },
+    {
+      "src": "/Behind the Scenes/IMG_0102.JPG",
+      "alt": "Behind the scenes shot 3"
+    },
+    {
+      "src": "/Behind the Scenes/97A06CF4-ABCE-43DB-8314-DA0BDC7EFCB9.JPG",
+      "alt": "Behind the scenes shot 4"
+    },
+    {
+      "src": "/Behind the Scenes/IMG_1884.JPG",
+      "alt": "Behind the scenes shot 5"
+    },
+    {
+      "src": "/Behind the Scenes/IMG_1880.JPG",
+      "alt": "Behind the scenes shot 6"
+    },
+    {
+      "src": "/Behind the Scenes/F3A51CE9-C0A2-4415-BFEC-EDCE18C3DF32.JPG",
+      "alt": "Behind the scenes shot 7"
+    },
+    {
+      "src": "/Behind the Scenes/70052D65-652F-4739-B986-59B78EA35924.JPG",
+      "alt": "Behind the scenes shot 8"
+    },
+    {
+      "src": "/Behind the Scenes/E7DEDF13-FAB9-4690-8377-434416CAD07F.JPG",
+      "alt": "Behind the scenes shot 9"
+    },
+    {
+      "src": "/Behind the Scenes/64CFE46F-E5A1-47D8-BC67-E49BD76A3615.JPG",
+      "alt": "Behind the scenes shot 10"
+    },
+    {
+      "src": "/Behind the Scenes/476DBF0E-5C86-431B-BE48-8144A07CD9FE.JPG",
+      "alt": "Behind the scenes shot 11"
+    },
+    {
+      "src": "/Behind the Scenes/8D877BCF-B03A-4545-8AC5-1545E608DAD8.JPG",
+      "alt": "Behind the scenes shot 12"
+    },
+    {
+      "src": "/Behind the Scenes/38514643_10156587524761730_5408487844375166976_n.jpg",
+      "alt": "Behind the scenes shot 13"
+    },
+    {
+      "src": "/Behind the Scenes/EE30792E-EC80-41AF-A28B-8601F935C668.JPG",
+      "alt": "Behind the scenes shot 14"
+    },
+    {
+      "src": "/Behind the Scenes/5FE84C24-2094-4FCC-80AC-E2BA8476A735.JPG",
+      "alt": "Behind the scenes shot 15"
+    },
+    {
+      "src": "/Behind the Scenes/IMG_1877.JPG",
+      "alt": "Behind the scenes shot 16"
+    },
+    {
+      "src": "/Behind the Scenes/11377292_10153316476631730_3435423361538922929_n.jpg",
+      "alt": "Behind the scenes shot 17"
+    },
+    {
+      "src": "/Behind the Scenes/10685505_10152661710950944_1441279641665516703_n.jpg",
+      "alt": "Behind the scenes shot 18"
+    },
+    {
+      "src": "/Behind the Scenes/IMG_4926.JPG",
+      "alt": "Behind the scenes shot 19"
+    },
+    {
+      "src": "/Behind the Scenes/541596_10153316476596730_7481285191087716084_n.jpg",
+      "alt": "Behind the scenes shot 20"
+    },
+    {
+      "src": "/Behind the Scenes/B3B9461E-19F5-4BC4-AC28-F28C4E18F7DD.JPG",
+      "alt": "Behind the scenes shot 21"
+    },
+    {
+      "src": "/Behind the Scenes/10703678_10152687459986730_3971207780636393857_n.jpg",
+      "alt": "Behind the scenes shot 22"
+    },
+    {
+      "src": "/Behind the Scenes/38633655_10156587524751730_5061913335394467840_n.jpg",
+      "alt": "Behind the scenes shot 23"
+    },
+    {
+      "src": "/Behind the Scenes/1DFD4C53-1362-400F-81DA-2DCEEB7413A1.JPG",
+      "alt": "Behind the scenes shot 24"
+    },
+    {
+      "src": "/Behind the Scenes/5AB61D1A-5F51-4235-847A-2AF5CA674B1A.JPG",
+      "alt": "Behind the scenes shot 25"
+    },
+    {
+      "src": "/Behind the Scenes/IMG_3562.JPG",
+      "alt": "Behind the scenes shot 26"
+    },
+    {
+      "src": "/Behind the Scenes/11038861_871927582874110_2673508100100685537_n.jpg",
+      "alt": "Behind the scenes shot 27"
+    },
+    {
+      "src": "/Behind the Scenes/IMG_0807.JPG",
+      "alt": "Behind the scenes shot 28"
+    },
+    {
+      "src": "/Behind the Scenes/AAA6B04E-EF72-4A85-BC53-3CE534AC9101.JPG",
+      "alt": "Behind the scenes shot 29"
+    },
+    {
+      "src": "/Behind the Scenes/IMG_0809.JPG",
+      "alt": "Behind the scenes shot 30"
+    },
+    {
+      "src": "/Behind the Scenes/19723_871934882873380_6972814126575137292_n.jpg",
+      "alt": "Behind the scenes shot 31"
+    },
+    {
+      "src": "/Behind the Scenes/11210449_872426459490889_8692109396028267066_n.jpg",
+      "alt": "Behind the scenes shot 32"
+    }
+  ],
+  "serviceGallery": [
+    {
+      "src": "/still_frames/vlcsnap-2025-04-09-18h03m03s395.png",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/vlcsnap-2025-04-09-18h07m04s643.png",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/vlcsnap-2025-04-09-18h05m43s758.png",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/vlcsnap-2025-02-02-09h02m19s138.png",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/IMG_6099.jpg",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/vlcsnap-2019-09-30-12h47m28s766.png",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/67061028_2396880820533974_5588608026761232384_n.jpg",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/66749535_2396880770533979_730794341886328832_n.jpg",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/vlcsnap-2025-04-09-17h59m32s057.png",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/vlcsnap-2025-04-09-17h56m43s135.png",
+      "alt": "Production still"
+    },
+    {
+      "src": "/still_frames/29187258_2047027835519276_5837352509408018432_n.jpg",
+      "alt": "Production still"
+    }
+  ],
+  "homeText": [
+    "\"At Kan Nari Production, we turn your vision into compelling video narratives with heart and precision. Based in the Greater Washington Area, we handle the details—from concept to final cut—so you can focus on your message. Whether it's a corporate promo, non-profit campaign, social media video, or creative project, we're here to make your story resonate and deliver results. Let's bring it to life together.\""
+  ],
+  "aboutText": [
+    "At Kan Nari Production, we believe every story deserves to be told with heart and precision. Based in the dynamic Greater Washington Area, we're a videography team passionate about capturing the essence of businesses, causes, and creative visions.",
+    "With deep experience in video production, we bring technical expertise and a fresh perspective to every project. Our background in digital leadership and social media management sets us apart—we don't just create videos, we craft visual narratives that resonate and deliver results. Whether it's a polished corporate promo, a compelling non-profit campaign, or standout B-roll for a creative endeavor, we tailor each frame to amplify your mission.",
+    "What fuels us? A drive to tell stories that matter and a commitment to making your ideas stand out. From local startups to established corporations and impactful non-profits, we're here to bring your vision to life. Let's create something powerful together."
+  ],
+  "contactText": [
+    "Have a project in mind? We'd love to hear from you. Fill out the form below and we'll get back to you as soon as possible."
+  ],
+  "servicesText": "Video production can feel like navigating a maze of details and logistics, tailored to your industry and audience. We take the complexity off your plate, ensuring a seamless process from start to finish while keeping you and your team informed every step of the way. Whether you're aiming for a commercial, promotional, or testimonial video, we collaborate closely to bring your message to life with clarity and impact."
+}

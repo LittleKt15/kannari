@@ -1,0 +1,16 @@
+{
+  "name": "Kannari Production",
+  "short_name": "Kannari",
+  "description": "Professional video production and creative services",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
