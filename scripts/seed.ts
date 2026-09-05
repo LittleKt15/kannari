@@ -9,21 +9,13 @@ const context = { skipRevalidation: true }
 const media = new Map<string, number>()
 async function upload(src: string, alt: string) {
   if (media.has(src)) return media.get(src)!
-  const existing = await payload.find({
+  const doc = await payload.create({
     collection: 'media',
-    where: { seedKey: { equals: src } },
-    limit: 1,
     overrideAccess: true,
+    filePath: path.resolve('seed/assets', `.${src}`),
+    data: { alt, seedKey: src },
+    context,
   })
-  const doc =
-    existing.docs[0] ||
-    (await payload.create({
-      collection: 'media',
-      overrideAccess: true,
-      filePath: path.resolve('seed/assets', `.${src}`),
-      data: { alt, seedKey: src },
-      context,
-    }))
   media.set(src, doc.id)
   return doc.id
 }
@@ -49,82 +41,121 @@ function rich(paragraphs: string[]) {
   }
 }
 try {
+  // Load identities once per collection, without populating relationships.
+  // Newly inserted identities are added below so duplicate input also stays idempotent.
+  const [savedMedia, savedClients, savedProjects, savedServices, savedPages] = await Promise.all([
+    payload.find({
+      collection: 'media',
+      where: { seedKey: { exists: true } },
+      select: { seedKey: true },
+      pagination: false,
+      depth: 0,
+      overrideAccess: true,
+    }),
+    payload.find({
+      collection: 'clients',
+      where: { seedKey: { exists: true } },
+      select: { seedKey: true },
+      pagination: false,
+      depth: 0,
+      overrideAccess: true,
+    }),
+    payload.find({
+      collection: 'projects',
+      where: { seedKey: { exists: true } },
+      select: { seedKey: true },
+      pagination: false,
+      depth: 0,
+      overrideAccess: true,
+    }),
+    payload.find({
+      collection: 'services',
+      where: { seedKey: { exists: true } },
+      select: { seedKey: true },
+      pagination: false,
+      depth: 0,
+      overrideAccess: true,
+    }),
+    payload.find({
+      collection: 'pages',
+      select: { slug: true },
+      pagination: false,
+      depth: 0,
+      overrideAccess: true,
+    }),
+  ])
+  for (const item of savedMedia.docs) if (item.seedKey) media.set(item.seedKey, item.id)
+  const clientIDs = new Map(savedClients.docs.map((item) => [item.seedKey, item.id]))
+  const projectIDs = new Map(savedProjects.docs.map((item) => [item.seedKey, item.id]))
+  const serviceIDs = new Map(savedServices.docs.map((item) => [item.seedKey, item.id]))
+  const pageSlugs = new Set(savedPages.docs.map((item) => item.slug))
   const clients: number[][] = []
   for (const group of [data.logos1, data.logos2]) {
     const ids: number[] = []
     for (const item of group) {
-      const found = await payload.find({
-        collection: 'clients',
-        where: { seedKey: { equals: item.name } },
-        overrideAccess: true,
-        limit: 1,
-      })
-      const doc =
-        found.docs[0] ||
-        (await payload.create({
-          collection: 'clients',
-          overrideAccess: true,
-          context,
-          data: {
-            name: item.name,
-            seedKey: item.name,
-            logo: await upload(item.url, item.name),
-            _status: 'published',
-          },
-        }))
-      ids.push(doc.id)
+      const id =
+        clientIDs.get(item.name) ??
+        (
+          await payload.create({
+            collection: 'clients',
+            overrideAccess: true,
+            context,
+            data: {
+              name: item.name,
+              seedKey: item.name,
+              logo: await upload(item.url, item.name),
+              _status: 'published',
+            },
+          })
+        ).id
+      clientIDs.set(item.name, id)
+      ids.push(id)
     }
     clients.push(ids)
   }
   const projects: number[] = []
   for (const item of data.projects) {
-    const found = await payload.find({
-      collection: 'projects',
-      where: { seedKey: { equals: item.id } },
-      overrideAccess: true,
-      limit: 1,
-    })
-    const doc =
-      found.docs[0] ||
-      (await payload.create({
-        collection: 'projects',
-        overrideAccess: true,
-        context,
-        data: {
-          seedKey: item.id,
-          title: item.title,
-          subtitle: item.subtitle,
-          image: await upload(item.imageSrc, item.title),
-          videoType: item.videoType as 'vimeo' | 'youtube',
-          videoID: item.vimeoId || item.youtubeId!,
-          vimeoHash: item.vimeoHash,
-          _status: 'published',
-        },
-      }))
-    projects.push(doc.id)
+    const id =
+      projectIDs.get(item.id) ??
+      (
+        await payload.create({
+          collection: 'projects',
+          overrideAccess: true,
+          context,
+          data: {
+            seedKey: item.id,
+            title: item.title,
+            subtitle: item.subtitle,
+            image: await upload(item.imageSrc, item.title),
+            videoType: item.videoType as 'vimeo' | 'youtube',
+            videoID: item.vimeoId || item.youtubeId!,
+            vimeoHash: item.vimeoHash,
+            _status: 'published',
+          },
+        })
+      ).id
+    projectIDs.set(item.id, id)
+    projects.push(id)
   }
   const services: number[] = []
   for (const item of data.services) {
-    const found = await payload.find({
-      collection: 'services',
-      where: { seedKey: { equals: item.category } },
-      overrideAccess: true,
-      limit: 1,
-    })
-    const doc =
-      found.docs[0] ||
-      (await payload.create({
-        collection: 'services',
-        overrideAccess: true,
-        context,
-        data: {
-          seedKey: item.category,
-          title: item.category,
-          items: item.items.map((label) => ({ label })),
-          _status: 'published',
-        },
-      }))
-    services.push(doc.id)
+    const id =
+      serviceIDs.get(item.category) ??
+      (
+        await payload.create({
+          collection: 'services',
+          overrideAccess: true,
+          context,
+          data: {
+            seedKey: item.category,
+            title: item.category,
+            items: item.items.map((label) => ({ label })),
+            _status: 'published',
+          },
+        })
+      ).id
+    serviceIDs.set(item.category, id)
+    services.push(id)
   }
   const gallery = async (items: { src: string; alt: string }[]) => {
     const result = []
@@ -205,19 +236,15 @@ try {
     },
   ]
   for (const page of pages) {
-    const found = await payload.find({
-      collection: 'pages',
-      where: { slug: { equals: page.slug } },
-      overrideAccess: true,
-      limit: 1,
-    })
-    if (!found.docs.length)
+    if (!pageSlugs.has(page.slug)) {
       await payload.create({
         collection: 'pages',
         overrideAccess: true,
         context,
         data: { ...page, _status: 'published' },
       })
+      pageSlugs.add(page.slug)
+    }
   }
   const settings = await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })
   if (!settings.navigation?.length)

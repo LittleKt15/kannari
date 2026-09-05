@@ -12,7 +12,7 @@
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
-    "test": "npm run test:int",
+    "test": "pnpm run test:int",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
     "typecheck": "tsc --noEmit",
@@ -40,7 +40,8 @@
     "@payloadcms/live-preview-react": "3.88.0",
     "lucide-react": "^0.477.0",
     "framer-motion": "^12.9.0",
-    "@vercel/blob": "2.3.1"
+    "@vercel/blob": "2.3.1",
+    "pg": "8.20.0"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2",
@@ -63,14 +64,8 @@
     "@types/pg": "^8.15.5"
   },
   "engines": {
-    "node": "^18.20.2 || >=20.9.0",
-    "pnpm": "^9 || ^10 || ^11"
+    "node": ">=22.13.0",
+    "pnpm": "11.22.0"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "sharp",
-      "esbuild",
-      "unrs-resolver"
-    ]
-  }
+  "packageManager": "pnpm@11.22.0"
 }

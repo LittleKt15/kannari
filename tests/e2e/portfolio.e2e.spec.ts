@@ -73,12 +73,15 @@ test.afterAll(async () => {
     if (user) await payload.delete({ collection: 'users', id: user.id, overrideAccess: true })
   await payload.destroy()
 })
-test('public portfolio, mobile navigation, and gallery selection', async ({ page }) => {
+test('public portfolio, mobile navigation, and gallery selection', async ({ page, request }) => {
   const errors: string[] = []
   page.on('pageerror', (e) => errors.push(e.message))
   for (const route of ['/', '/about', '/work', '/services', '/contact']) {
-    const result = await page.goto(route)
-    expect(result?.status()).toBe(200)
+    // Check HTTP separately: a navigation interrupted by dev-server refresh can return null.
+    const response = await request.get(route)
+    expect(response.status(), `HTTP status for ${route}`).toBe(200)
+    await page.goto(route, { waitUntil: 'domcontentloaded' })
+    await expect(page).toHaveURL(new URL(route, 'http://localhost:3001').href)
     await expect(page.locator('main')).toBeVisible()
   }
   await page.goto('/about')
@@ -90,7 +93,10 @@ test('public portfolio, mobile navigation, and gallery selection', async ({ page
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await pictures.nth(1).click()
   await expect(page.getByRole('dialog')).toContainText('2 / 32')
-  await page.keyboard.press('Escape')
+  await page
+    .getByRole('button', { name: 'Close dialog backdrop', exact: true })
+    .click({ position: { x: 5, y: 5 } })
+  await expect(page.getByRole('dialog')).toHaveCount(0)
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
   await page.getByRole('button', { name: 'Open navigation' }).click()
@@ -139,6 +145,57 @@ test('REST permissions, draft privacy, and publish invalidation', async ({ reque
   const publicRead = await request.get(`/api/pages/${draftID}?draft=true`)
   expect(await publicRead.text()).not.toContain('Unpublished revision')
 })
+test('seed identifiers stay private and immutable through REST', async ({ request }) => {
+  const ids: number[] = []
+  try {
+    const seeded = await payload.create({
+      collection: 'services',
+      overrideAccess: true,
+      context,
+      data: { title: marker, seedKey: marker, _status: 'published' },
+    })
+    ids.push(seeded.id)
+    const publicRead = await request.get(`/api/services/${seeded.id}`)
+    expect(publicRead.ok()).toBeTruthy()
+    expect(await publicRead.json()).not.toHaveProperty('seedKey')
+    const headers = { Authorization: `JWT ${token}` }
+    const changed = await request.patch(`/api/services/${seeded.id}`, {
+      headers,
+      data: { title: `${marker}-edited`, seedKey: `${marker}-tampered` },
+    })
+    expect(changed.ok(), await changed.text()).toBeTruthy()
+    expect(await changed.json()).not.toHaveProperty('seedKey')
+    const stored = await payload.findByID({
+      collection: 'services',
+      id: seeded.id,
+      overrideAccess: true,
+    })
+    expect(stored.seedKey).toBe(marker)
+    expect(stored.title).toBe(`${marker}-edited`)
+    const created = await request.post('/api/services', {
+      headers,
+      data: { title: `${marker}-created`, seedKey: `${marker}-injected`, _status: 'draft' },
+    })
+    const body = await created.json()
+    if (body.doc?.id) ids.push(body.doc.id)
+    expect(created.ok()).toBeTruthy()
+    const saved = await payload.findByID({
+      collection: 'services',
+      id: body.doc.id,
+      overrideAccess: true,
+    })
+    expect(saved.seedKey ?? null).toBeNull()
+    for (const collection of ['projects', 'services', 'clients']) {
+      expect((await request.post(`/api/${collection}`, { data: { title: marker } })).status()).toBe(
+        403,
+      )
+    }
+  } finally {
+    for (const id of ids)
+      await payload.delete({ collection: 'services', id, overrideAccess: true, context })
+  }
+})
+
 test('admin dashboard and editable page controls', async ({ page }) => {
   await page.goto('/admin/login')
   await page.locator('input[name="email"]').fill(admin.email)
@@ -184,6 +241,42 @@ test('contact persists when SMTP is absent, validates, and throttles', async ({ 
     expect((await request.post('/api/contact', { data, headers })).status()).toBe(201)
   expect((await request.post('/api/contact', { data, headers })).status()).toBe(429)
 })
+
+for (const javaScriptEnabled of [true, false]) {
+  test(`contact Server Action works with JavaScript ${javaScriptEnabled ? 'enabled' : 'disabled'}`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled,
+      baseURL: 'http://localhost:3001',
+    })
+    try {
+      const page = await context.newPage()
+      await page.goto('/contact')
+      await page.locator('input[name="firstName"]').fill('   ')
+      await page.locator('input[name="lastName"]').fill('Preserved')
+      await page.locator('input[name="email"]').fill(`${marker}@example.invalid`)
+      await page.locator('input[name="phoneNumber"]').fill('123456')
+      await page.locator('select[name="serviceInterest"]').selectOption('other')
+      await page.locator('input[name="otherService"]').fill('Verification')
+      await page.locator('textarea[name="message"]').fill('Server Action verification')
+      await page.getByRole('button', { name: 'Send', exact: true }).click()
+      await expect(page.locator('form').getByRole('alert')).toContainText('Please check firstName.')
+      await expect(page.locator('input[name="lastName"]')).toHaveValue('Preserved')
+      await expect(page.locator('input[name="otherService"]')).toHaveValue('Verification')
+      await page.locator('input[name="firstName"]').fill('Verification')
+      // Exercise success feedback without persisting an inquiry or sending real email.
+      await page.locator('input[name="website"]').evaluate((input: HTMLInputElement) => {
+        input.value = 'bot'
+      })
+      await page.getByRole('button', { name: 'Send', exact: true }).click()
+      await expect(page.getByRole('status')).toContainText('Thank you')
+      await expect(page.locator('input[name="firstName"]')).toHaveValue('')
+    } finally {
+      await context.close()
+    }
+  })
+}
 
 test('authenticated large media uploads go directly to Blob', async ({ page }) => {
   test.skip(!process.env.BLOB_READ_WRITE_TOKEN, 'Requires a public Blob store')

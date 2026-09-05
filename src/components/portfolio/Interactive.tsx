@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Project } from '@/payload-types'
-type Picture = { src: string; alt: string }
+type Picture = { id: string; src: string; alt: string }
 function Modal({
   children,
   close,
@@ -27,17 +27,17 @@ function Modal({
     }
   }, [])
   return (
-    <dialog
-      ref={ref}
-      aria-label={label}
-      onCancel={close}
-      className="portfolio-dialog"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) close()
-      }}
-    >
-      <div className="relative w-full max-w-6xl mx-auto">
+    <dialog ref={ref} aria-label={label} onCancel={close} className="portfolio-dialog">
+      <button
+        type="button"
+        aria-label="Close dialog backdrop"
+        tabIndex={-1}
+        className="fixed inset-0 cursor-default"
+        onClick={close}
+      />
+      <div className="relative z-10 w-full max-w-6xl mx-auto">
         <button
+          type="button"
           onClick={close}
           aria-label="Close dialog"
           className="absolute right-2 top-2 z-20 p-3 rounded-full bg-black/80 text-white"
@@ -50,14 +50,16 @@ function Modal({
   )
 }
 export function Gallery({ pictures, aspect }: { pictures: Picture[]; aspect: 'square' | 'video' }) {
-  const [index, setIndex] = useState<number | null>(null)
+  const [selectedID, setSelectedID] = useState<string | null>(null)
+  const index = pictures.findIndex((picture) => picture.id === selectedID)
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-        {pictures.map((p, i) => (
+        {pictures.map((p) => (
           <button
-            key={`${p.src}-${i}`}
-            onClick={() => setIndex(i)}
+            type="button"
+            key={p.id}
+            onClick={() => setSelectedID(p.id)}
             className={`relative ${aspect === 'video' ? 'aspect-video' : 'aspect-square'} overflow-hidden rounded-lg group`}
             aria-label={`Open ${p.alt}`}
           >
@@ -71,12 +73,13 @@ export function Gallery({ pictures, aspect }: { pictures: Picture[]; aspect: 'sq
           </button>
         ))}
       </div>
-      {index !== null && pictures[index] && (
-        <Modal close={() => setIndex(null)} label="Image gallery">
+      {index >= 0 && pictures[index] && (
+        <Modal close={() => setSelectedID(null)} label="Image gallery">
           <div
             onKeyDown={(e) => {
-              if (e.key === 'ArrowLeft') setIndex((index + pictures.length - 1) % pictures.length)
-              if (e.key === 'ArrowRight') setIndex((index + 1) % pictures.length)
+              if (e.key === 'ArrowLeft')
+                setSelectedID(pictures[(index + pictures.length - 1) % pictures.length].id)
+              if (e.key === 'ArrowRight') setSelectedID(pictures[(index + 1) % pictures.length].id)
             }}
           >
             <div className="relative w-full aspect-video">
@@ -89,16 +92,20 @@ export function Gallery({ pictures, aspect }: { pictures: Picture[]; aspect: 'sq
               />
               <div className="absolute inset-0 flex items-center justify-between pointer-events-none">
                 <button
+                  type="button"
                   aria-label="Previous image"
                   className="pointer-events-auto bg-black/80 p-3 rounded-full"
-                  onClick={() => setIndex((index + pictures.length - 1) % pictures.length)}
+                  onClick={() =>
+                    setSelectedID(pictures[(index + pictures.length - 1) % pictures.length].id)
+                  }
                 >
                   <ChevronLeft />
                 </button>
                 <button
+                  type="button"
                   aria-label="Next image"
                   className="pointer-events-auto bg-black/80 p-3 rounded-full"
-                  onClick={() => setIndex((index + 1) % pictures.length)}
+                  onClick={() => setSelectedID(pictures[(index + 1) % pictures.length].id)}
                 >
                   <ChevronRight />
                 </button>
@@ -107,10 +114,11 @@ export function Gallery({ pictures, aspect }: { pictures: Picture[]; aspect: 'sq
             <div className="flex justify-center gap-2 overflow-x-auto py-4">
               {pictures.map((p, i) => (
                 <button
-                  key={i}
+                  type="button"
+                  key={p.id}
                   aria-label={`View image ${i + 1}`}
                   aria-current={i === index}
-                  onClick={() => setIndex(i)}
+                  onClick={() => setSelectedID(p.id)}
                   className={`relative w-12 h-12 shrink-0 ${i === index ? 'ring-2 ring-white' : 'opacity-60'}`}
                 >
                   <Image src={p.src} alt="" fill sizes="48px" className="object-cover" />
@@ -136,6 +144,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
             typeof p.image === 'object' &&
             p.image?.url && (
               <button
+                type="button"
                 key={p.id}
                 onClick={() => setSelected(p)}
                 className="relative w-full max-w-[605px] aspect-video group overflow-hidden"
